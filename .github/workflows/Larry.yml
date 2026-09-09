@@ -1,0 +1,16 @@
+name: Unzip Streamsync File
+
+on:
+  workflow_dispatch: # Allows you to trigger this manually from the GitHub Actions tab
+
+jobs:
+  unzip-file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unzip streamsync (2).zip to repository root
+        run: |
+          unzip -o "${{ github.workspace }}/streamsync (2).zip" -d "${{ github.workspace }}"
