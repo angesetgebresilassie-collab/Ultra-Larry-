@@ -24,6 +24,13 @@ jobs:
           gradle wrapper
           chmod +x gradlew
 
+      - name: Generate Debug Keystore
+        run: |
+          keytool -genkey -v -keystore debug.keystore -keyalias androiddebugkey \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass android -keypass android \
+            -dname "CN=Android Debug,O=Android,C=US"
+
       - name: Build Debug APK
         run: ./gradlew assembleDebug --no-daemon
 
@@ -32,4 +39,3 @@ jobs:
         with:
           name: app-debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
-          
