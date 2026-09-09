@@ -1,0 +1,36 @@
+# .github/workflows/unzip-project.yml
+name: Unzip project archive
+
+on:
+  workflow_dispatch:        # lets you trigger it manually from the Actions tab
+  push:
+    paths:
+      - "streamsync.zip"    # re-runs any time you push a new/updated zip
+
+permissions:
+  contents: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Unzip archive into repo root
+        run: |
+          if [ ! -f streamsync.zip ]; then
+            echo "streamsync.zip not found at repo root - nothing to do."
+            exit 1
+          fi
+          unzip -o streamsync.zip -d .
+          rm streamsync.zip
+
+      - name: Commit extracted files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && echo "Nothing to commit" && exit 0
+          git commit -m "Extract streamsync.zip into repo"
+          git push
