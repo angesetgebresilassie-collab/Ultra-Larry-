@@ -25,8 +25,9 @@ jobs:
       # (only gradle/wrapper/gradle-wrapper.properties), so we let
       # gradle/actions/setup-gradle install the exact Gradle version that
       # file points at and invoke `gradle` directly instead of `./gradlew`.
-      - name: Read required Gradle version
+        - name: Read required Gradle version
         id: gradle_version
         run: |
-          VERSION=$(grep -oP 'distributionUrl=.*gradle-\K[0-9.]+(?=-bin\.zip)' gradle/wrapper/gradle-wrapper.properties)
-          echo "version=$VERSION" >>
+          VERSION=$(sed -n 's/^distributionUrl=.*gradle-\([0-9.]*\)-bin\.zip/\1/p' gradle/wrapper/gradle-wrapper.properties)
+          echo "Detected Gradle version: $VERSION"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
